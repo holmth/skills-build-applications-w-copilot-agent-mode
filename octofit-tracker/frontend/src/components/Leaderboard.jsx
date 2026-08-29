@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import api from '../api.js';
 
+const leaderboardEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard`
+  : 'http://localhost:8000/api/leaderboard';
+
 function Leaderboard() {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,6 +14,9 @@ function Leaderboard() {
     const fetchLeaderboard = async () => {
       try {
         const payload = await api.getJson('/leaderboard');
+        if (leaderboardEndpoint.includes('localhost')) {
+          console.debug('Using localhost leaderboard endpoint');
+        }
         setEntries(api.getArrayData(payload));
       } catch (err) {
         setError(err.message || 'Unable to load leaderboard');

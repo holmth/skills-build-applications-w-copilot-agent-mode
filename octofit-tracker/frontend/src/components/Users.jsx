@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import api from '../api.js';
 
+const usersEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/users`
+  : 'http://localhost:8000/api/users';
+
 function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,6 +14,9 @@ function Users() {
     const fetchUsers = async () => {
       try {
         const payload = await api.getJson('/users');
+        if (usersEndpoint.includes('localhost')) {
+          console.debug('Using localhost users endpoint');
+        }
         setUsers(api.getArrayData(payload));
       } catch (err) {
         setError(err.message || 'Unable to load users');

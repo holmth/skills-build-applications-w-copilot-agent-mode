@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import api from '../api.js';
 
+const activitiesEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/activities`
+  : 'http://localhost:8000/api/activities';
+
 function Activities() {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,6 +14,9 @@ function Activities() {
     const fetchActivities = async () => {
       try {
         const payload = await api.getJson('/activities');
+        if (activitiesEndpoint.includes('localhost')) {
+          console.debug('Using localhost activities endpoint');
+        }
         setActivities(api.getArrayData(payload));
       } catch (err) {
         setError(err.message || 'Unable to load activities');

@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import api from '../api.js';
 
+const workoutsEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/workouts`
+  : 'http://localhost:8000/api/workouts';
+
 function Workouts() {
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,6 +14,9 @@ function Workouts() {
     const fetchWorkouts = async () => {
       try {
         const payload = await api.getJson('/workouts');
+        if (workoutsEndpoint.includes('localhost')) {
+          console.debug('Using localhost workouts endpoint');
+        }
         setWorkouts(api.getArrayData(payload));
       } catch (err) {
         setError(err.message || 'Unable to load workouts');
