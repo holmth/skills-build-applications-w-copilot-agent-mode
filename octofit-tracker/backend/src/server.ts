@@ -11,14 +11,9 @@ import workoutsRouter from './routes/workouts.js';
 const app = express();
 const port = Number(process.env.PORT ?? 8000);
 
-const getBaseUrl = (portNumber: number) => {
-  const codespaceName = process.env.CODESPACE_NAME;
-  return codespaceName
-    ? `https://${codespaceName}-${portNumber}.app.github.dev`
-    : `http://localhost:${portNumber}`;
-};
-
-const baseUrl = getBaseUrl(port);
+const baseUrl = process.env.CODESPACE_NAME
+  ? `https://${process.env.CODESPACE_NAME}-8000.app.github.dev`
+  : `http://localhost:${port}`;
 
 
 app.use(cors());
