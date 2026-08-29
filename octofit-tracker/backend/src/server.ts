@@ -9,14 +9,18 @@ import usersRouter from './routes/users.js';
 import workoutsRouter from './routes/workouts.js';
 
 const app = express();
-const port = Number(process.env.PORT) || 8000;
+const port = Number(process.env.PORT ?? 8000);
 
-const codespaceName = process.env.CODESPACE_NAME;
-const baseUrl = codespaceName
-  ? `https://${codespaceName}-${port}.app.github.dev`
-  : `http://localhost:${port}`;
+const getBaseUrl = (portNumber: number) => {
+  const codespaceName = process.env.CODESPACE_NAME;
+  return codespaceName
+    ? `https://${codespaceName}-${portNumber}.app.github.dev`
+    : `http://localhost:${portNumber}`;
+};
 
-  
+const baseUrl = getBaseUrl(port);
+
+
 app.use(cors());
 app.use(express.json());
 
